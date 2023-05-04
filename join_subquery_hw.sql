@@ -51,13 +51,25 @@ SELECT rating, count(rating) FROM film
 GROUP BY rating 
 ORDER BY count(rating) DESC;
 
---Exercise 7: Show all customers who have made a single paymennt above $6.99 (Use Subqueries)
+--Exercise 7: Show all customers who have made a single payment above $6.99 (Use Subqueries)
 SELECT first_name, last_name
 FROM customer WHERE customer_id IN (
-	SELECT customer_id 
+	SELECT DISTINCT customer_id
 	FROM payment 
-	WHERE amount > 6.99
+	WHERE amount > 6.99 
 );
+
+--Exercise 7.1: Wasn't entirely sure if this was a trick question, but there were no customers who made exactly one single transaction. In the case of our database, it would conclude to 0 customers
+SELECT first_name, last_name
+FROM customer WHERE customer_id IN(
+	SELECT customer_id FROM payment
+	GROUP BY customer_id 
+	HAVING count(amount) = 1
+);
+
+SELECT customer_id, count(amount) FROM payment 
+GROUP BY customer_id 
+HAVING count(amount) < 1
 
 --Exercise 8: How many free rentals did our stores give away?
 SELECT count(amount) FROM payment 
